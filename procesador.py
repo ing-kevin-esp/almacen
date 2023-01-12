@@ -32,12 +32,12 @@ class Procesador:
         df_merged_all = self.actualizacionsheet.merge(self.matrizSheet, how='left', left_on='iblitm', right_on='iblitm', indicator=True)
         df_merged_inner = df_merged_all.where(df_merged_all['_merge']=='both').dropna(thresh=2)
 
-        df_merged_inner_few_columns = df_merged_inner[['ibsrp1_y', 'iblitm' ,'descripcion_y', 'um_y', 'sistema', 'lipqoh', 'lilocn_y', 'c42_y',       'ClasABC_y', 'Empaque_y']]
+        df_merged_inner_few_columns = df_merged_inner[['ibsrp1_y', 'iblitm' ,'descripcion_y', 'um_y', 'lipqoh', 'fisico', 'lilocn_y', 'c42_y','ClasABC_y', 'Empaque_y']]
         new_names = {
             'ibsrp1_y':'ibsrp1',
             'descripcion_y':'descripcion',
             'um_y': 'um',
-            'lipqoh': 'fisico',
+            'lipqoh': 'sistema',
             'lilocn_y': 'lilocn',
             'c42_y': 'c42',
             'ClasABC_y':'ClasABC',
@@ -51,13 +51,14 @@ class Procesador:
         df_merged_all = self.diferenciasSheet.merge(self.hectorSheet, how='left', left_on='iblitm', right_on='iblitm', indicator=True)
         df_merged_inner = df_merged_all.where(df_merged_all['_merge']=='both').dropna(thresh=2)
 
-        df_merged_inner_few_columns = df_merged_inner[['ibsrp1_y', 'iblitm' ,'descripcion_y', 'um_y',  'sistema_y','sistema_x','lilocn_y', 'c42_y', 'ClasABC_y', 'Empaque_y']]
+        df_merged_inner_few_columns = df_merged_inner[['ibsrp1_y', 'iblitm' ,'descripcion_y', 'um_y',  'sistema','sistema_x','lilocn_y', 'c42_y', 'ClasABC_y', 'Empaque_y']]
+
         new_names = {
             'ibsrp1_y':'ibsrp1',
             'descripcion_y':'descripcion',
             'um_y': 'um',
-            'sist._y':'sist',
-            'sist._x': 'fisico',#aqui va duda, que columna es la que se tiene que tomar como "fisico ??"
+            'sistema_y':'sist',
+            'sistema_x': 'fisico',#aqui va duda, que columna es la que se tiene que tomar como "fisico ??"
             'lilocn_y': 'lilocn',
             'c42_y': 'c42',
             'ClasABC_y':'ClasABC',
@@ -87,11 +88,11 @@ class Procesador:
         self.pedroResult = df_merged_inner_few_columns.rename(columns=new_names)
 
     def save(self):
-        pdb.set_trace()
+
         self.itemsNuevosSheet.to_excel(self.writer, sheet_name='items_nuevos', header=True, startrow=0, index=False)
         self.diferenciasSheet.to_excel(self.writer, sheet_name='matriz', header=True, startrow=0, index=False)
-        self.hectorResult.to_excel(self.writer, sheet_name='hector', header=True, startrow=0, index=False)
-        self.pedroResult.to_excel(self.writer, sheet_name='pedro', header=True, startrow=0, index=False)
+        #self.hectorResult.to_excel(self.writer, sheet_name='hector', header=True, startrow=0, index=False)
+        #self.pedroResult.to_excel(self.writer, sheet_name='pedro', header=True, startrow=0, index=False)
         self.writer.close()
 
 
@@ -125,8 +126,8 @@ class Formateador:
 a = Procesador('FORMATO DE INVENTARIO.xlsx')
 a.search_new_items()
 a.differences_with_matrix()
-a.hector()
-a.pedro()
+#a.hector()
+#a.pedro()
 a.save()
 
 b = Formateador()
